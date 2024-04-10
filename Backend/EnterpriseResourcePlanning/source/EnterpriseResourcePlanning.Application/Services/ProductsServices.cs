@@ -1,5 +1,6 @@
 ﻿using EnterpriseResourcePlanning.Application.Interfaces;
 using EnterpriseResourcePlanning.Domain.Entities;
+using EnterpriseResourcePlanning.Domain.Struct;
 using EnterpriseResourcePlanning.Infrastructure.Interfaces;
 using Microsoft.CodeAnalysis.CSharp.Syntax;
 
@@ -30,7 +31,7 @@ public class ProductsServices(
     {
         try
         {
-            var product = await persistence.GetProductsByCode(code);
+            var product = await persistence.GetProductByCode(code);
             return product;
         }
         catch (Exception ex)
@@ -52,6 +53,20 @@ public class ProductsServices(
             throw new Exception(ex.Message);
         }
     }
+
+    public async Task<Products> GetProductsById(CustomerId id)
+    {
+        try
+        {
+            var product = await persistence.GetProductById(id);
+            return product;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception(ex.Message);
+        }
+    }
+
     public async Task<Products> AddAasync(Products product)
     {
         try

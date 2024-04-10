@@ -1,5 +1,6 @@
 ﻿using EnterpriseResourcePlanning.Application.Interfaces;
 using EnterpriseResourcePlanning.Domain.Entities;
+using EnterpriseResourcePlanning.Domain.Struct;
 
 using Microsoft.AspNetCore.Mvc;
 
@@ -14,6 +15,7 @@ public static class EndpointProducts
         app.MapGet("/register/product/{code}", GetProductCode).WithOpenApi().WithName("Get Products by code");
         app.MapPost("/register/product", RegisterProduct).WithOpenApi().WithName("Register Product");
         app.MapPut("/register/products", UpdateProduct).WithOpenApi().WithName("Update Product");
+        app.MapDelete("/register/products/delete/{id}", ).WithOpenApi().WithName("Delete Product");
     }
 
     public static async Task<IResult> GetAllProducts([FromServices] IProductsServices service) 
@@ -48,5 +50,18 @@ public static class EndpointProducts
         await service.UpdateAsync(product);
 
         return Results.Ok($"The product:{product.ProductName} has beem updated successfully!");
+    }
+
+    public static async Task<IResult> DeleteProduct([FromServices] IProductsServices service, [FromHeader] string id) 
+    {
+        if(CustomerId.TryParse(id, out var customerId)) 
+        {
+            var product = await service.GetProductById(customerId);
+            await service.DeleteAsync(product);
+            if (await service.GetProductById(customerId) != null) return Results.Problem("Unable to delete");
+
+            return Results.Ok("Product deleted successfully");
+        }
+        return Results.BadRequest();
     }
 }
