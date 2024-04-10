@@ -56,13 +56,15 @@ public class ProductsServices(
     {
         try
         {
-            unitOfWork.BeginTransaction();
-            await repository.AddAasync( product );
-            var result = await unitOfWork.CommitAsync();
+            using (unitOfWork.BeginTransaction())
+            {
+                await repository.AddAasync(product);
+                var result = await unitOfWork.CommitAsync();
 
-            if (!result) throw new Exception("Unable to save product");
+                if (!result) throw new Exception("Unable to save product");
 
-            return product;
+                return product;
+            }
         }
         catch (Exception ex)
         {
@@ -79,13 +81,16 @@ public class ProductsServices(
     {
         try
         {
-            unitOfWork.BeginTransaction();
-            _ = repository.Update(product);
-            var result =  await unitOfWork.CommitAsync();
+            using (unitOfWork.BeginTransaction())
+            {
+                _ = repository.Update(product);
 
-            if (!result) throw new Exception("Unable to save product");
+                var result = await unitOfWork.CommitAsync();
 
-            return product;
+                if (!result) throw new Exception("Unable to save product");
+
+                return product;
+            }
         }
         catch (Exception ex)
         {
@@ -102,13 +107,15 @@ public class ProductsServices(
     {
         try
         {
-            unitOfWork.BeginTransaction();
-            _ = repository.Delete(product);
-            var result = await unitOfWork.CommitAsync();
+            using (unitOfWork.BeginTransaction())
+            {
+                _ = repository.Delete(product);
+                var result = await unitOfWork.CommitAsync();
 
-            if (!result) throw new Exception("Unable to save product");
+                if (!result) throw new Exception("Unable to save product");
 
-            return product;
+                return product;
+            }
         }
         catch (Exception ex)
         {
