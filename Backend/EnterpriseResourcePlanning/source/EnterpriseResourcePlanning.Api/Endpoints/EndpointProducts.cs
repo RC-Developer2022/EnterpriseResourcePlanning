@@ -15,7 +15,7 @@ public static class EndpointProducts
         app.MapGet("/register/product/{code}", GetProductCode).WithOpenApi().WithName("Get Products by code");
         app.MapPost("/register/product", RegisterProduct).WithOpenApi().WithName("Register Product");
         app.MapPut("/register/products", UpdateProduct).WithOpenApi().WithName("Update Product");
-        app.MapDelete("/register/products/delete/{id}", ).WithOpenApi().WithName("Delete Product");
+        app.MapDelete("/register/products/delete/{id}", DeleteProduct).WithOpenApi().WithName("Delete Product");
     }
 
     public static async Task<IResult> GetAllProducts([FromServices] IProductsServices service) 
